@@ -1,28 +1,29 @@
 const express = require('express');
-const bodyParser = require('body-parser');
-const cors = require('cors');
-const path = require('path');
-
 const app = express();
-const PORT = 3000;
+const path = require('path');
+const db = require('./models/db'); 
 
-
-app.use(cors());
-app.use(bodyParser.json());
-
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-
 const usuariosRoutes = require('./routes/usuarios');
 const projetosRoutes = require('./routes/projetos');
-const matchesRoutes = require('./routes/matches');
+
 
 app.use('/api/usuarios', usuariosRoutes);
 app.use('/api/projetos', projetosRoutes);
-app.use('/api/matches', matchesRoutes);
 
 
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+
+
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`Servidor rodando em http://localhost:${PORT}`);
+  console.log(`Servidor rodando na porta ${PORT}`);
 });
